@@ -48,7 +48,7 @@
     const count = collected.size;
     introCount.textContent = String(count);
     introProgress.style.width = `${count / carrotItems.length * 100}%`;
-    introMessage.textContent = count ? `Собрано ${count} из ${carrotItems.length}.` : 'Морковки уже ждут.';
+    introMessage.textContent = '';
 
     if (count === carrotItems.length) {
       introMessage.textContent = 'Всё собрано. Открываю резюме…';
