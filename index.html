@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#005bff">
   <meta name="description" content="Артем Пустовой — ведущий Android-разработчик. 5 лет опыта: Kotlin, Jetpack Compose, Coroutines, Dagger 2, платформенная разработка и real-time.">
   <meta property="og:title" content="Артем Пустовой — Android-разработчик">
-  <meta property="og:description" content="Кандидат найден. 5 лет Android, платформа, продукт и немного морковок.">
+  <meta property="og:description" content="5 лет Android-разработки: платформа, продукт, real-time и немного морковок.">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ru_RU">
   <title>Артем Пустовой — ведущий Android-разработчик</title>
@@ -16,6 +16,7 @@
   <link rel="preload" href="assets/fonts/unbounded-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/unbounded-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/styles.css">
+  <noscript><style>.intro { display: none; }</style></noscript>
   <script src="assets/app.js" defer></script>
 </head>
 <body>
@@ -29,23 +30,44 @@
     </symbol>
   </svg>
 
+  <section class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introTitle">
+    <div class="intro-inner">
+      <div class="intro-topline"><span>/morkovsk</span><span><span id="introTopCount">0</span> / 6</span></div>
+      <div class="intro-layout">
+        <div class="intro-copy">
+          <p class="eyebrow eyebrow-orange">Небольшая мини-игра</p>
+          <h1 id="introTitle">Морковск</h1>
+          <p class="intro-lead">Соберите шесть морковок, чтобы попасть на сайт с моим резюме.</p>
+          <div class="intro-progress" aria-hidden="true"><span id="introProgress"></span></div>
+          <p class="intro-message" id="introMessage" role="status" aria-live="polite">Морковки уже ждут.</p>
+          <button class="intro-skip" id="skipIntro" type="button">Сразу к резюме<span aria-hidden="true">→</span></button>
+        </div>
+        <div class="carrot-patch intro-patch" role="group" aria-label="Соберите шесть морковок">
+          <button class="carrot-item" type="button" data-carrot="0" aria-label="01 — собрать морковку" aria-pressed="false"><span class="carrot-number">01</span><svg aria-hidden="true"><use href="#icon-carrot"/></svg></button>
+          <button class="carrot-item" type="button" data-carrot="1" aria-label="02 — собрать морковку" aria-pressed="false"><span class="carrot-number">02</span><svg aria-hidden="true"><use href="#icon-carrot"/></svg></button>
+          <button class="carrot-item" type="button" data-carrot="2" aria-label="03 — собрать морковку" aria-pressed="false"><span class="carrot-number">03</span><svg aria-hidden="true"><use href="#icon-carrot"/></svg></button>
+          <button class="carrot-item" type="button" data-carrot="3" aria-label="04 — собрать морковку" aria-pressed="false"><span class="carrot-number">04</span><svg aria-hidden="true"><use href="#icon-carrot"/></svg></button>
+          <button class="carrot-item" type="button" data-carrot="4" aria-label="05 — собрать морковку" aria-pressed="false"><span class="carrot-number">05</span><svg aria-hidden="true"><use href="#icon-carrot"/></svg></button>
+          <button class="carrot-item" type="button" data-carrot="5" aria-label="06 — собрать морковку" aria-pressed="false"><span class="carrot-number">06</span><svg aria-hidden="true"><use href="#icon-carrot"/></svg></button>
+        </div>
+      </div>
+      <p class="intro-footnote">Артем Пустовой · Android-разработчик</p>
+    </div>
+  </section>
+
   <header class="site-header">
     <div class="header-inner">
       <a class="brand" href="#top" aria-label="AP — Артем Пустовой, на главную">
         <span class="brand-mark">AP</span>
-        <span class="brand-text">detect me<span class="brand-dot">.</span></span>
+        <span class="brand-text">Артем Пустовой<span class="brand-dot">.</span></span>
       </a>
       <nav class="desktop-nav" aria-label="Основная навигация">
         <a href="#about">Обо мне</a>
         <a href="#experience">Опыт</a>
         <a href="#skills">Стек</a>
-        <a href="#morkovsk">Морковск</a>
+        <a href="#intro" data-open-intro>Морковск</a>
       </nav>
       <div class="header-actions">
-        <a class="carrot-balance" href="#morkovsk" aria-label="Морковки: 0. Перейти к игре">
-          <svg aria-hidden="true"><use href="#icon-carrot"/></svg>
-          <span id="headerCarrotCount">0</span>
-        </a>
         <a class="button button-small button-blue header-resume" href="assets/artem-pustovoy-android.pdf" download>Скачать PDF</a>
         <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="mobileNav" aria-label="Открыть меню">
           <span></span><span></span>
@@ -56,12 +78,12 @@
       <a href="#about">Обо мне</a>
       <a href="#experience">Опыт</a>
       <a href="#skills">Стек</a>
-      <a href="#morkovsk">Морковск</a>
+      <a href="#intro" data-open-intro>Морковск</a>
       <a href="assets/artem-pustovoy-android.pdf" download>Скачать резюме</a>
     </nav>
   </header>
 
-  <main id="main">
+  <main id="main" tabindex="-1">
     <section class="hero section-shell" id="top">
       <div class="hero-copy">
         <p class="eyebrow eyebrow-light"><span class="status-dot"></span>Открыт к предложениям</p>
@@ -69,19 +91,19 @@
         <p class="hero-role">Ведущий Android-разработчик</p>
         <p class="hero-lead">Пять лет разрабатываю Android-приложения. Последние два года отвечаю не только за экраны, но и за платформу: авторизацию, безопасность, real-time и инструменты для других разработчиков.</p>
         <div class="hero-buttons">
-          <a class="button button-white" href="#detect-card">Задетектить меня<span aria-hidden="true">↓</span></a>
+          <a class="button button-white" href="assets/artem-pustovoy-android.pdf" download>Скачать резюме<span aria-hidden="true">↓</span></a>
           <a class="button button-ghost" href="https://github.com/Pec3maker" target="_blank" rel="noopener noreferrer">GitHub<span aria-hidden="true">↗</span></a>
         </div>
         <p class="hero-location">Краснодар <span>·</span> удалённо или гибрид</p>
       </div>
 
-      <div class="candidate-card" id="detect-card">
+      <div class="candidate-card">
         <div class="card-topline">
           <span>Карточка кандидата</span>
-          <span class="in-stock"><span></span>в наличии</span>
+          <span class="in-stock"><span></span>открыт к предложениям</span>
         </div>
         <div class="candidate-identity">
-          <div class="candidate-avatar" aria-hidden="true">AP<span>&lt;/&gt;</span></div>
+          <img class="candidate-avatar" src="assets/artem-pustovoy.webp" alt="Артем Пустовой" width="720" height="810" fetchpriority="high">
           <div>
             <h2>Артем Пустовой</h2>
             <p>Android · Senior / Lead</p>
@@ -96,9 +118,6 @@
         <div class="candidate-tags" role="group" aria-label="Ключевые технологии">
           <span>Coroutines</span><span>Flow</span><span>Dagger 2</span>
         </div>
-        <div class="scanner" aria-hidden="true"></div>
-        <button class="button button-blue detect-button" id="detectButton" type="button">Запустить detect</button>
-        <p class="detect-result" id="detectResult" role="status" aria-live="polite">Нажмите — проверим совпадение по стеку.</p>
       </div>
     </section>
 
@@ -221,43 +240,6 @@
       </div>
     </section>
 
-    <section class="morkovsk-section" id="morkovsk">
-      <div class="section-shell morkovsk-layout">
-        <div class="morkovsk-copy">
-          <p class="eyebrow eyebrow-orange">Пасхалка · Морковск</p>
-          <h2>Соберите урожай<br>компетенций.</h2>
-          <p>Шесть морковок, шесть технологий из моих проектов. Никакой лотереи: просто короткая сводка стека и немного Ozon-настроения.</p>
-          <div class="harvest-status">
-            <div class="harvest-count"><strong id="harvestCount">0</strong><span>/ 6 собрано</span></div>
-            <div class="harvest-track" aria-hidden="true"><span id="harvestProgress"></span></div>
-          </div>
-          <p class="harvest-message" id="harvestMessage" role="status" aria-live="polite">Нажимайте на морковки — покажу, что умею.</p>
-          <a class="button button-blue harvest-cta" id="harvestCta" href="mailto:apupro5@gmail.com?subject=Интервью%20с%20Артемом" hidden>Обсудить интервью<span aria-hidden="true">↗</span></a>
-          <button class="text-button" id="resetHarvest" type="button" hidden>Собрать заново</button>
-        </div>
-        <div class="carrot-patch" role="group" aria-label="Шесть морковок с навыками">
-          <button class="carrot-item" type="button" data-carrot="0" data-message="Kotlin — основной язык во всех моих проектах." aria-pressed="false">
-            <svg aria-hidden="true"><use href="#icon-carrot"/></svg><span>Kotlin</span><small>основной язык</small>
-          </button>
-          <button class="carrot-item" type="button" data-carrot="1" data-message="Compose — экраны, компоненты дизайн-системы и snapshot-тесты." aria-pressed="false">
-            <svg aria-hidden="true"><use href="#icon-carrot"/></svg><span>Compose</span><small>современный UI</small>
-          </button>
-          <button class="carrot-item" type="button" data-carrot="2" data-message="Coroutines и Flow — сеть, события и состояние приложения." aria-pressed="false">
-            <svg aria-hidden="true"><use href="#icon-carrot"/></svg><span>Flow</span><small>асинхронность</small>
-          </button>
-          <button class="carrot-item" type="button" data-carrot="3" data-message="Dagger 2 — внедрение зависимостей в многомодульных приложениях." aria-pressed="false">
-            <svg aria-hidden="true"><use href="#icon-carrot"/></svg><span>Dagger 2</span><small>внедрение зависимостей</small>
-          </button>
-          <button class="carrot-item" type="button" data-carrot="4" data-message="Gradle — плагины, Version Catalog и сборки в GitLab CI." aria-pressed="false">
-            <svg aria-hidden="true"><use href="#icon-carrot"/></svg><span>Gradle</span><small>инженерия сборки</small>
-          </button>
-          <button class="carrot-item" type="button" data-carrot="5" data-message="WebRTC — аудио, видео и управление конференциями." aria-pressed="false">
-            <svg aria-hidden="true"><use href="#icon-carrot"/></svg><span>WebRTC</span><small>real-time</small>
-          </button>
-        </div>
-      </div>
-    </section>
-
     <section class="education-section section-shell" id="education">
       <div class="section-heading"><p class="eyebrow">База и коммуникация</p><h2>Учусь. Делюсь.</h2></div>
       <div class="education-grid">
@@ -277,7 +259,7 @@
 
     <section class="contact-section section-shell" id="contact">
       <div class="contact-carrot" aria-hidden="true"><svg><use href="#icon-carrot"/></svg></div>
-      <p class="eyebrow eyebrow-light">Кандидат найден</p>
+      <p class="eyebrow eyebrow-light">Контакты</p>
       <h2>Не будем играть<br>в розыгрыш.</h2>
       <p>Если вам нужен Android-разработчик с продуктовым и платформенным опытом — напишите мне. Обсудим задачи и команду.</p>
       <div class="contact-buttons">

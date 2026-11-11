@@ -3,6 +3,19 @@
 
   const menuToggle = document.getElementById('menuToggle');
   const mobileNav = document.getElementById('mobileNav');
+  const main = document.getElementById('main');
+  const intro = document.getElementById('intro');
+  const skipIntro = document.getElementById('skipIntro');
+  const introCount = document.getElementById('introTopCount');
+  const introProgress = document.getElementById('introProgress');
+  const introMessage = document.getElementById('introMessage');
+  const carrotItems = Array.from(document.querySelectorAll('[data-carrot]'));
+  const pageElements = Array.from(document.querySelectorAll('.skip-link, .site-header, #main, .site-footer'));
+  const storageKey = 'ap-intro-seen-v1';
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let collected = new Set();
+  let closeTimer = null;
+  let previousFocus = null;
 
   function closeMenu() {
     mobileNav.hidden = true;
@@ -17,68 +30,14 @@
     menuToggle.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
   });
   mobileNav.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && !mobileNav.hidden) {
-      closeMenu();
-      menuToggle.focus();
-    }
-  });
 
-  const detectButton = document.getElementById('detectButton');
-  const detectResult = document.getElementById('detectResult');
-  const detectCard = document.getElementById('detect-card');
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let scanning = false;
-
-  detectButton.addEventListener('click', () => {
-    if (scanning) return;
-    scanning = true;
-    detectButton.disabled = true;
-    detectButton.textContent = 'Сканируем…';
-    detectCard.classList.remove('is-found');
-    detectCard.classList.add('is-scanning');
-
-    const steps = [
-      '> Kotlin / Android SDK — найдено',
-      '> Compose / Coroutines / Flow — найдено',
-      '> Platform + Product — совпадение',
-      'Кандидат найден. Осталось назначить интервью.'
-    ];
-    const delay = reducedMotion ? 0 : 600;
-    steps.forEach((step, index) => {
-      window.setTimeout(() => {
-        detectResult.textContent = step;
-        if (index === steps.length - 1) {
-          detectCard.classList.remove('is-scanning');
-          detectCard.classList.add('is-found');
-          detectButton.disabled = false;
-          detectButton.textContent = 'Проверить ещё раз';
-          scanning = false;
-        }
-      }, delay * (index + 1));
+  function setPageInert(value) {
+    pageElements.forEach((element) => {
+      element.inert = value;
     });
-  });
-
-  const carrotItems = Array.from(document.querySelectorAll('[data-carrot]'));
-  const harvestCount = document.getElementById('harvestCount');
-  const harvestProgress = document.getElementById('harvestProgress');
-  const harvestMessage = document.getElementById('harvestMessage');
-  const harvestCta = document.getElementById('harvestCta');
-  const resetHarvest = document.getElementById('resetHarvest');
-  const headerCarrotCount = document.getElementById('headerCarrotCount');
-  const storageKey = 'ap-carrots-v1';
-  let collected = new Set();
-
-  try {
-    const saved = JSON.parse(localStorage.getItem(storageKey) || '[]');
-    if (Array.isArray(saved)) {
-      collected = new Set(saved.filter((index) => Number.isInteger(index) && index >= 0 && index < carrotItems.length));
-    }
-  } catch (_) {
-    collected = new Set();
   }
 
-  function renderHarvest(message) {
+  function renderIntro() {
     carrotItems.forEach((item) => {
       const isCollected = collected.has(Number(item.dataset.carrot));
       item.classList.toggle('is-collected', isCollected);
@@ -87,40 +46,94 @@
     });
 
     const count = collected.size;
-    harvestCount.textContent = String(count);
-    headerCarrotCount.textContent = String(count);
-    headerCarrotCount.parentElement.setAttribute('aria-label', `Морковки: ${count}. Перейти к игре`);
-    harvestProgress.style.width = `${count / carrotItems.length * 100}%`;
-    harvestMessage.textContent = message || (count ? `Собрано ${count} из ${carrotItems.length}.` : 'Нажимайте на морковки — покажу, что умею.');
-    harvestCta.hidden = count !== carrotItems.length;
-    resetHarvest.hidden = count === 0;
+    introCount.textContent = String(count);
+    introProgress.style.width = `${count / carrotItems.length * 100}%`;
+    introMessage.textContent = count ? `Собрано ${count} из ${carrotItems.length}.` : 'Морковки уже ждут.';
 
-    if (count === carrotItems.length && !message) {
-      harvestMessage.textContent = 'Всё собрано. Теперь стек можно обсудить на интервью.';
+    if (count === carrotItems.length) {
+      introMessage.textContent = 'Всё собрано. Открываю резюме…';
+      window.clearTimeout(closeTimer);
+      closeTimer = window.setTimeout(closeIntro, reducedMotion ? 150 : 900);
     }
   }
 
-  carrotItems.forEach((item) => {
-    item.addEventListener('click', () => {
-      const index = Number(item.dataset.carrot);
-      if (collected.has(index)) return;
-      collected.add(index);
-      const complete = collected.size === carrotItems.length;
-      renderHarvest(complete ? 'Всё собрано. Теперь стек можно обсудить на интервью.' : item.dataset.message);
-      try {
-        localStorage.setItem(storageKey, JSON.stringify(Array.from(collected)));
-      } catch (_) {}
+  function openIntro() {
+    window.clearTimeout(closeTimer);
+    previousFocus = document.activeElement;
+    collected.clear();
+    intro.hidden = false;
+    document.body.classList.add('intro-open');
+    setPageInert(true);
+    renderIntro();
+    carrotItems[0].focus();
+  }
+
+  function closeIntro() {
+    window.clearTimeout(closeTimer);
+    intro.hidden = true;
+    document.body.classList.remove('intro-open');
+    setPageInert(false);
+    try {
+      localStorage.setItem(storageKey, 'true');
+    } catch (_) {}
+
+    if (previousFocus && previousFocus.isConnected) {
+      previousFocus.focus();
+    } else {
+      main.focus();
+    }
+  }
+
+  skipIntro.addEventListener('click', closeIntro);
+  document.querySelectorAll('[data-open-intro]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      closeMenu();
+      openIntro();
     });
   });
 
-  resetHarvest.addEventListener('click', () => {
-    collected.clear();
-    try {
-      localStorage.removeItem(storageKey);
-    } catch (_) {}
-    renderHarvest();
-    carrotItems[0].focus();
+  carrotItems.forEach((item) => {
+    item.addEventListener('click', () => {
+      collected.add(Number(item.dataset.carrot));
+      renderIntro();
+    });
   });
-  renderHarvest();
 
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      if (!intro.hidden) {
+        closeIntro();
+      } else if (!mobileNav.hidden) {
+        closeMenu();
+        menuToggle.focus();
+      }
+    }
+
+    if (event.key === 'Tab' && !intro.hidden) {
+      const focusable = Array.from(intro.querySelectorAll('button:not(:disabled)'));
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+  });
+
+  let seen = false;
+  try {
+    seen = localStorage.getItem(storageKey) === 'true';
+  } catch (_) {}
+
+  if (seen) {
+    intro.hidden = true;
+  } else {
+    document.body.classList.add('intro-open');
+    setPageInert(true);
+  }
+  renderIntro();
 })();
