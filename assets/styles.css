@@ -92,7 +92,7 @@ img, svg { display: block; max-width: 100%; }
 @keyframes copy-enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes card-enter { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 20px; }
+.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
 .metrics article { padding: 26px; background: var(--surface); border: 1px solid #edf0f4; border-radius: 20px; }
 .metrics strong { display: block; margin-bottom: 8px; font-family: var(--display); font-size: 22px; line-height: 1.2; letter-spacing: -.055em; }
 .metrics span { display: block; color: var(--muted); font-size: 12px; line-height: 1.5; }
